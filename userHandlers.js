@@ -98,7 +98,7 @@ const users = [
       })
       .catch((err) => {
         console.error(err);
-        res.status(500).send("Error saving the movie");
+        res.status(500).send("Error saving the user");
       });
       
     };
@@ -121,7 +121,7 @@ const users = [
         })
         .catch((err) => {
           console.error(err);
-          res.status(500).send("Error editing the movie");
+          res.status(500).send("Error editing the user");
         });
     };
   

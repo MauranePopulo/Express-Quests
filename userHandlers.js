@@ -1,64 +1,22 @@
 const database = require("./database");
-
-const users = [
-    {  
-      id: 1,
-      firstname: "John",
-      lastname:'Doe',
-      email:'john.doe@example.com',
-      city:'Paris',
-      language: 'English',
-    
-    },
-    {
-      id: 2,
-      firstname:'Valeriy',
-      lastname:'Appius',
-      email:'valeriy.appius@example.com',
-      city: 'Moscow',
-      language: 'Russian',
-    },
-    {
-      id: 3,
-      firstname:'Ralf',
-      lastname:'Geronimo',
-      email:'ralf.geronimo@example.com',
-      city:'New York',
-      language:'Italian'
-    },
-
-    {
-        id: 4,
-        firstname:'Maria',
-        lastname:'Iskandar',
-        email:'maria.iskandar@example.com',
-        city:'New York',
-        language:'German'
-
-      },
-
-      {
-        id: 5,
-        firstname:'Jane',
-        lastname:'Doe',
-        email:'jane.doe@example.com',
-        city:'London',
-        language:'English'
-      },
-
-      {
-        id: 6,
-        firstname:'Johanna',
-        lastname:'Martino',
-        email:'johanna.martino@example.com',
-        city:'Milan',
-        language:'Spanish'
-      },
-  ];
   
   const getUsers = (req, res) => {
-    database
-    .query("select * from users")
+    let sql = "select * from users";
+  const sqlValues = [];
+if (req.query.language != null) {
+  sql += " where language = ?";
+  sqlValues.push(req.query.language);
+
+  if (req.query.city != null) {
+    sql += " and city = ? ";
+    sqlValues.push(req.query.city);
+  }
+} else if (req.query.city != null) {
+  sql += " where city = ? ";
+  sqlValues.push(req.query.city);
+}
+  database
+    .query(sql, sqlValues)
     .then(([users]) => {
       res.json(users);
     })
@@ -66,7 +24,7 @@ const users = [
       console.error(err);
       res.status(500).send("Error retrieving data from database");
     });
-  };
+};
   
     const getUserById = (req, res) => {
       const id = parseInt(req.params.id);
